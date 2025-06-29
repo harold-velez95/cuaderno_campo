@@ -1,0 +1,220 @@
+body{
+    background: #A1FFCE;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #FAFFD1, #A1FFCE);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #FAFFD1, #A1FFCE); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    margin: 0px;
+    padding: 0px;
+}
+
+.main{
+    padding-top: 25px;
+    color: #3F7D58;
+    background-color: white;
+    width:100%;
+    font-weight:bold;
+    text-align:center;
+    font-family: 'sans-serif';
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+.main_form{
+
+    color:#3F7D58;
+    background-color: white;
+    width:100%;
+    font-weight:bold;
+    text-align:center;
+    font-family: 'sans-serif';
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    min-height: 500px;
+}
+
+.main_table{
+
+    color:#3F7D58;
+    background-color: white;
+    width:100%;
+    font-weight:bold;
+    text-align:center;
+    font-family: 'sans-serif';
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+}
+h1{
+  padding: 10px;
+  margin:10px;
+  font-size:50px;
+}
+
+.bodysec{
+    font-weight: bold;
+    margin-top:10px;
+    text-align: center;
+    font-family: 'sans-serif';
+    display:flex;
+    flex-wrap:wrap;
+    gap:35px;
+    justify-content:center;
+    min-height: 400px;
+}
+
+.bodysec_table{
+    padding-top: 25px;
+    color:#3F7D58;
+    font-weight: bold;
+    background-color:white;
+    text-align: center;
+    font-family: 'sans-serif';
+    display:flex;
+    flex-direction:column;
+    gap:25px;
+    justify-content:flex-start;
+    min-height: 100vh;
+}
+header{
+  text-align:center;
+}
+
+.menu{
+   position:sticky;
+   display:flex;
+   justify-content:center;
+   background-color: #3F7D58;
+   font-size: 25px;
+   gap: 20px;
+
+}
+
+.menu a{
+  text-decoration: none;
+  color:white;
+  margin:10px;
+}
+
+footer{
+   position:absolut;
+   bottom:0;
+   width:100%;
+   height:100px;
+}
+
+.boton1{
+  float:right;
+  margin:20px;
+  border-radius: 20px;
+    border-color: #01bc61;
+    border-style: groove;
+    padding: 15px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 20px;
+    margin-right: 5%;
+    background-color: white;
+    width:200px;
+}
+
+.boton1:hover {
+    background-color: #01bc6217;
+    box-shadow: 5px 5px 20px rgba(9, 131, 70, 0.4);
+}
+
+.card {
+    padding-top: 15px;
+    background-position: center center;
+    background-size: cover;
+    border-radius: 8px;
+    transition: transform 0.2s;
+}
+
+.card_main {
+    padding: 20px;
+    background-position: center center;
+    background-size: cover;
+    border-radius: 8px;
+    transition: transform 0.2s;
+}
+
+.cardtareas {
+    background-position: center center;
+    background-size: cover;
+    border-radius: 8px;
+    border: 0.3px groove gray;
+    transition: transform 0.2s;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap:15px;
+    padding:15px;
+}
+
+.boton_status{
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: lightgreen;
+    border: none;
+    cursor: pointer;
+}
+
+.boton_status:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+}
+
+.card img, .card_main img{
+   width: 250px;
+   height: 250px;
+}
+
+.card h3 {
+    font-size: 20px;
+    text-align: center;
+    color: #3F7D58 ;
+    font-weight: 600;
+}
+
+.card_main h3{
+    font-size: 20px;
+    text-align: center;
+    color: #3F7D58 ;
+    font-weight: 600;
+    margin: 15px;
+
+}
+
+.card:hover, .cardtareas:hover, .card_main:hover {
+    box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.4);
+    transform: translateY(-0.2%);
+}
+
+img {
+    width: 20%;
+}
+
+.bodysec a{
+  text-decoration:none;
+}
+
+p{
+ font-size:20px;
+ text-align:left;
+ 
+}
+
+.cardtareas p span{
+  color:#3f5249 ;
+  font-weight: 600;
+  font-size: 20px;
+  padding:15px;
+}
+
+.botones{
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+         <meta charset="UTF-8">
+         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+         <title>ARCASENS</title>
+         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='info.css') }}">
+         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+         <link rel="preconnect" href="https://fonts.googleapis.com">
+         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='form.css') }}">
+         <link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet">
+
+    </head>
+    <body style="background-color:#C9D6FF">
+        <header>
+                <a href="/"><img src="{{ url_for('static', filename='imagen/arcasens.jpg') }}"></a>
+        </header>
+        <div class="menu">
+            <a href="/recursos">ir a Recursos</a>
+        </div>
+        <div class="main_table">
+            <h1>Mis productos</h1>
+            <div class="bodysec_table">
+                <table class="info">
+                    <tr>
+                        <th class="left">Tipo de producto</th>
+                        <th>Nombre comercial</th>
+                        <th>Numero registro</th>
+                        <th>Tipo de abono</th>
+                        <th>Descripcion</th>
+                        <th>Fabricante</th>
+                        <th>Ingrediente activo</th>
+                        <th>autorizado hasta</th>
+                        <th>fecha de caducidad</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th class="right">Opciones</th>
+                    </tr>
+                    {% for x in datos%}
+                    <tr>
+                        <td>{{x.tipo_producto}}</td>
+                        <td>{{x.producto}}</td>
+                        <td>{{x.registro}}</td>
+                        <td>{{x.abono}}</td>
+                        <td>{{x.descripcion}}</td>
+                        <td>{{x.fabricante}}</td>
+                        <td>{{x.ingrediente}}</td>
+                        <td>{{x.autorizado}}</td>
+                        <td>{{x.caducidad}}</td>
+                        <td>{{x.costos.costo}} €/ {{x.costos.unidades}}</td>
+                        <td>{{x.costos.cantidad}} {{x.costos.unidades_c}}</td>
+                        <td><div class="botones">
+                            <a onclick="editar('entrar_inventario', {{x.id}})"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="blue" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                            </svg></a>
+                            <a href="/eliminar/5/{{x.id}}"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red" class="bi bi-trash" viewBox="0 0 16 16">
+                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                            <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                            </svg></a>
+                            </div>
+                       </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <footer><button type="button" onclick="form_view()" class="boton1">Añadir producto (+)</button></footer>
+        </div>
+        <div id="main_form" style="display: none;">
+            <form action="/crear_producto" class="form_inventario" method="post">
+                <div class="opciones">
+                    <h1>Tipo de producto</h1><br>
+                    <label>
+                       <span>Fertilizantes</span>
+                       <input type="radio" name="tipo_producto" value="fertilizante" id="entrada" onclick="entradas()" checked>
+                     </label>
+                    <label>
+                         <span>Pesticidas</span>
+                         <input type="radio" name="tipo_producto" value="pesticida" id="salida" onclick="entradas()">
+                    </label>
+                </div>
+                <div class="drops">
+                    <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle dropdown-color" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">Información básica</button>
+                        <ul class="dropdown-menu p-4">
+                            <li><input type="text" name="producto" size="20" maxlength="40" placeholder="nombre comercial" style="float:center"></li>
+                            <li><input type="text" name="registro" size="20" maxlength="40" placeholder="número de registro" style="float:center"></li>
+                            <li><input type="text" name="fabricante" size="20" maxlength="40" placeholder="fabricante" style="float:center"></li>
+                            <li><input type="text" name="descripcion" size="20" maxlength="80" placeholder="descripcion" style="float:center"></li>
+                            <li>Autorizado hasta:<input type="date" name="autorizado" size="20" maxlength="40" style="float:center"></li>
+                            <li>Fecha de caducidad:<input type="date" name="caducidad" size="20" maxlength="40" style="float:center"></li>
+                            <li id="fertilizantes">Tipo de abono:<select name="abono">
+                                    <option>N/A</option>
+                                    <option value="fondo">Fondo</option>
+                                    <option value="cobertera">Cobertera</option>
+                                </select></li>
+                            <li id="pesticidas" style="display:none;"><input type="text" name="ingrediente" size="20" maxlength="40" placeholder="ingrediente activo" style="float:center"></li>
+                        </ul>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle dropdown-color" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">Costos</button>
+                        <ul class="dropdown-menu p-4">
+                            <li><input type="number" name="costo" placeholder="costo de producto"> €
+                                <select name="unidades">
+                                    <option>unidades</option>
+                                    <option value="Kg">Kg</option>
+                                    <option value="Gr">Gr</option>
+                                    <option value="Ton">Ton</option>
+                                </select></li>
+                        </ul>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle dropdown-color" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">Stock</button>
+                        <ul class="dropdown-menu p-4">
+                            <li><input type="number" name="cantidad" placeholder="cantidad a ingresar">
+                                <select name="unidades_c">
+                                    <option>unidades</option>
+                                    <option value="Kg">Kg</option>
+                                    <option value="Gr">Gr</option>
+                                    <option value="Ton">Ton</option>
+                                </select></li>
+                        </ul>
+                </div>
+
+                </div>
+                <button class="boton1" type="submit">Añadir producto (+)</button>
+            </form>
+        </div>
+        {% for x in datos %}
+            <form action="/editar/2/{{x.id}}" id="editar_parcela_{{x.id}}"  method="post" style="display: none;">
+                <ul>
+                    <li><input type="number" name="cantidad" placeholder="cantidad a ingresar">
+                        <select name="unidades_c">
+                            <option>unidades</option>
+                            <option value="Kg">Kg</option>
+                            <option value="Gr">Gr</option>
+                            <option value="Ton">Ton</option>
+                        </select></li>
+                </ul>
+               
+                    <button type="submit" onclick="editar('salir_inventario', {{x.id}})" class="boton1">Editar</button>
+            </form>
+            {% endfor %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+       <script src="/static/script.js"></script>
+    </body>
+</html>

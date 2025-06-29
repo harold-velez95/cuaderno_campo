@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+         <meta charset="UTF-8">
+         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+         <title>ARCASENS</title>
+         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='form.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='info.css') }}">
+         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+         <link rel="preconnect" href="https://fonts.googleapis.com">
+         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+         <link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet">
+
+    </head>
+    <body style="background-color:#C9D6FF">
+            <header>
+                <a href="/"><img src="{{ url_for('static', filename='imagen/arcasens.jpg') }}"></a>
+            </header>
+            <div class="menu">
+                <a href="/recursos">Ir a Recursos</a>
+            </div>
+            <div class="main_table">
+                <div class="bodysec_table">
+                    <h1>Mis Equipos</h1>
+                    <table class="info">
+                        <tr>
+                            <th class="left">Nombre del equipo</th>
+                            <th>Matrícula</th>
+                            <th>No ROMA</th>
+                            <th>Modelo</th>
+                            <th>Marca</th>
+                            <th>Serie</th>
+                            <th>Tipo</th>
+                            <th>fecha de adquisición</th>
+                            <th class="right">Opciones</th>
+                        {% for x in datos%}
+                        <tr>
+                            <td>{{x.nombre}}</td>
+                            <td>{{x.matricula}}</td>
+                            <td>{{x.roma}}</td>
+                            <td>{{x.modelo}}</td>
+                            <td>{{x.marca}}</td>
+                            <td>{{x.serie}}</td>
+                            <td>{{x.tipo}}</td>
+                            <td>{{x.fecha}}</td>
+                            <td><div class="botones">
+                                 <a href="/eliminar/2/{{x.id}}"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red" class="bi bi-trash" viewBox="0 0 16 16">
+                                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                 <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                 </svg></a>
+                                 </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <footer id="footer_equipos"><button type="button" onclick=" form_view()" class="boton1">Crear (+)</button></footer>
+
+            </div>
+            
+            <div id="main_form" style=" display : none;">
+                <form action="/crear_equipo" method="post">
+                        <fieldset>
+                          
+                            <span>Nombre del equipo:</span><input type="text" name="nombre" size="35" maxlength="40">
+                            <span>Fecha de adquisición:</span><input type="date" name="fecha" size="20" maxlength="40">
+                            <span>Matricula:</span><input type="text" name="matricula" size="20" maxlength="40">
+                            <span>Número Roma:</span><input type="text" name="roma" size="20" maxlength="40">
+                            <span>Modelo:</span><input type="text" name="modelo" size="20" maxlength="40">
+                            <span>Marca:</span> <input type="text" name="marca" size="20" maxlength="40">
+                            <span>Serie:</span> <input type="text" name="serie" size="20" maxlength="40">
+                            <span>Tipo:</span>
+                            <select name="tipo">
+                                <option value="tractor">tractor</option>
+                                <option value="prepodadora">prepodadora</option>
+                                <option value="trituradora">trituradora</option>
+                                <option value="abonadora centrifugadora">abonadora centrifuga</option>
+                                <option value="cultivador">cultivador</option>
+                                <option value="atomizador">atomizador</option>
+                                <option value="despuntadora">despuntadora</option>
+                                <option value="espolvoreadora">espolvoreadora</option>
+                                <option value="vendimiadora">vendimiadora</option>
+                                <option value="tijeras electricas de poda">tijeras electricas de poda</option>
+                            </select>
+                        </fieldset>
+                        <button class="boton1" type="submit">Crear (+)</button>
+                </form>
+            </div>
+        <script src="/static/script.js"></script>
+    </body>
+</html>

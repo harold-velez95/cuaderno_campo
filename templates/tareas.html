@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+         <meta charset="UTF-8">
+         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+         <title>ARCASENS</title>
+         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='form.css') }}">
+         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+         <link rel="preconnect" href="https://fonts.googleapis.com">
+         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+         <link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet">
+
+    </head>
+    <body style="background-color:#C9D6FF;">
+            <header>
+                <a href="/"><img src="{{ url_for('static', filename='imagen/arcasens.jpg') }}"></a>
+            </header>
+            <div class="menu">
+                <a href="/recursos">Ir a Recursos</a>
+            </div>
+            <div class="main">
+                <div class="bodysec">
+                {% for valor in tareas%}
+                    <div class="cardtareas">
+                        <h1>{{valor.tipo_labor}}</h2>
+                        <p>
+                            {% if valor.tipo_labor=='fertilizacion' %}
+                        <span>Tipo de labor: </span> {{valor.fertilizar}}
+                        {% endif %}<br>
+                        <span>Aplicar a:</span> {{valor.parcela_tratar}}<br>
+                        <span>Prioridad: </span> {{valor.prioridad}}<br>
+                        <span>equipos a utilizar: </span> {{valor.equipos}}<br>
+                        <span>Personal a realizar la labor: </span> {{valor.personal}}<br>
+                        <span>Productos a emplear: </span> {{valor.productos}}<br>
+                        <span>Fecha de realización: </span> {{valor.fecha}}
+                        </p>
+                        <div class="card_status">
+                            <span>Estado:</span>
+                            <button class="boton_status" data-id="{{valor.id}}">Pendiente</button>
+                        </div>
+                        
+
+                    </div>
+                    {% endfor %}
+                </div>
+                <footer><button type="button" onclick="form_view()" class="boton1">Crear tarea (+)</button></footer>
+            </div>
+            <div id="main_form" style="display: none;">
+                <form action="/crear_tarea" class="form_tareas" method="post">
+                    <div class="container">
+                    <fieldset>
+                        <legend>Información de predio</legend>
+                        <span>parcelas a tratar:
+                           <select name="parcela_tratar">
+                               <option>N/A</option>
+                               {% for parce in parcelas %}
+                               <option value="{{parce.nombre}}">{{parce.nombre}}</option>
+                               {% endfor %}
+                           </select>
+                        </span>
+                        <span>unidades de gestión a tratar:
+                           <select name="unidades_tratar">
+                               <option>N/A</option>
+                               {% for parce in datos %}
+                               <option value="{{parce.nombre}}">{{parce.nombre}}</option>
+                               {% endfor %}
+                           </select>
+                        </span>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Información de labor</legend>
+                        <span>Tipo de labor:
+                            <select name="tipo_labor" id="tipo_labor" onchange="tarea(this.value)">
+                                <option>seleccionar</option>
+                                <option value="Fertilización">Fertilización</option>
+                                <option value="Fitosanitarios">Fitosanitarios</option>
+                                <option value="Culturales">Labores culturales</option>
+                            </select>
+                        </span>
+                        <span id="labores" style="display:none;">
+                            <select name="labores">
+                                <option>Labores</option>
+                                <option value="injertar">Injertar</option>
+                                <option value="prepodar">Prepodar</option>
+                                <option value="podar">Podar</option>
+                                <option value="despampanar">Despampanar</option>
+                                <option value="aclarar">Aclarar</option>
+                                <option value="eliminar malas hierbas">Quitar malas hierbas</option>
+                                <option value="cosechar">Cosechar</option>
+                                <option value="preparar terreno">Preparar terreno</option>
+                                <option value="raleo">Raleo</option>
+                                <option value="regar">Regar</option>
+                            </select>
+                        </span>
+                        <span id="fertilizar" style="display:none;">
+                            <select name="fertilizar">
+                                <option>Tipo de fertilización</option>
+                                <option value="aplicación de fondo">Fertilización de fondo</option>
+                                <option value=" aplicación de cobertera">Fertilización de cobertera</option>
+                            </select>
+                        </span>
+                        <span id="tratar" style="display:none;">
+                            <select name="tratar">
+                               <option>producto a aplicar</option>
+                               <option value="insecticida">Insecticida</option>
+                               <option value="fungicida">Fungicida</option>
+                               <option value="herbicida">Herbicida</option>
+                               <option value="otros">Otros</option>
+                            </select>
+                        </span>
+                        <span>Prioridad:
+                           <select name="prioridad">
+                              <option>Seleccionar</option>
+                              <option value="alta">Alta</option>
+                              <option value="baja">Baja</option>
+                              <option value="media">Media</option>
+                           </select>
+                        </span>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Recursos a emplear:</legend>
+                        <span>Personal para realizar la labor:
+                           <select name="personal">
+                              <option>Seleccionar</option>
+                              {% for perso in personal%}
+                               <option value="{{perso.nombre}}">{{perso.nombre}}</option>
+                               {% endfor %}
+                           </select>
+                        </span>
+                        <span>Equipos a utilizar:
+                            <select name="equipos">
+                                <option>Seleccionar</option>
+                                 {% for perso in equipos%}
+                                <option value="{{perso.nombre}}">{{perso.nombre}}</option>
+                               {% endfor %}
+                            </select>
+                        </span>
+                        <span>productos a emplear:
+                            <select name="productos">
+                                <option>Seleccionar</option>
+                                {% for perso in inventario%}
+                                <option value="{{perso.producto}}">{{perso.producto}}</option>
+                                {% endfor %}
+                            </select>
+                        </span>
+                        <span>Fecha de realización:
+                            <input type="date" name="fecha">
+                         </span>
+                    </fieldset>
+                    </div>
+                    <button type="submit" class="boton1">Añadir (+)</button>
+                </form>
+            </div>
+            <script src="/static/script.js"></script>
+    </body>
+</html>
