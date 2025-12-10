@@ -1,6 +1,7 @@
 from flask import Flask, render_template,request,redirect,url_for
 from models import Crear, Equipos, Infraestructura, Personal, Inventario, Ugestion, Costos, Tareas
 import db
+import os
 
 app = Flask(__name__)
 
