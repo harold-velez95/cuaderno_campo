@@ -200,4 +200,5 @@ if __name__ == "__main__":
     db.Base.metadata.create_all(db.engine)
     app.secret_key = 'super secret key'
     app.jinja_env.globals.update(zip=zip)
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
