@@ -1,31 +1,32 @@
 import db
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from datetime import datetime, date
+
+ugestion_parcela = Table(
+    "ugestion_parcela",
+    db.Base.metadata,
+    Column("ugestion_id", Integer, ForeignKey("unidades_gestion.id"), primary_key=True),
+    Column("parcela_id", Integer, ForeignKey("parcelas.id"), primary_key=True)
+)
 
 
 class Equipos(db.Base):
     __tablename__ = 'equipos'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    nombre = Column(String)
     fecha = Column(String)
     matricula = Column(String)
-    roma = Column(Integer)
-    modelo = Column(String)
-    marca = Column(String)
-    serie = Column(String)
-    tipo = Column(String)
+    tipo = Column(String, unique=True)
+    costo = Column(Integer)
 
-    def __init__(self, nombre, fecha, matricula, roma, modelo, marca, serie, tipo):
-        self.nombre = nombre
+    tareas = relationship("Tareas", back_populates="equipos")
+
+    def __init__(self, fecha, matricula, tipo, costo):
         self.fecha = fecha
         self.matricula = matricula
-        self.roma = roma
-        self.modelo=modelo
-        self.marca= marca
-        self.serie= serie
         self.tipo= tipo
+        self.costo = costo
 
 class Infraestructura(db.Base):
     __tablename__ = 'infraestructura'
@@ -33,18 +34,14 @@ class Infraestructura(db.Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     nombre = Column(String)
     direccion = Column(String)
-    poblacion = Column(String)
-    ciudad = Column(Integer)
-    pais = Column(String)
     local = Column(String)
+    costo = Column(Integer)
 
-    def __init__(self, nombre, direccion, poblacion, ciudad, pais, local):
+    def __init__(self, nombre, direccion, local, costo):
         self.nombre = nombre
         self.direccion = direccion
-        self.poblacion = poblacion
-        self.ciudad = ciudad
-        self.pais= pais
         self.local = local
+        self.costo = costo
 
 class Costos(db.Base):
     __tablename__ = 'costos'
@@ -71,30 +68,24 @@ class Personal(db.Base):
     __tablename__ = 'personal'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    nombre = Column(String)
-    apellido = Column(String)
+    nombre = Column(String, unique=True)
     nif = Column(String)
     direccion = Column(String)
-    poblacion = Column(String)
-    ciudad = Column(String)
-    pais = Column(String)
     movil = Column(Integer)
-    correo = Column(String)
     carnet = Column(String)
     rol = Column(String)
+    costo = Column(Integer)
 
-    def __init__(self, nombre, apellido, nif, direccion, poblacion, ciudad, pais, movil, correo, carnet, rol):
+    tareas = relationship("Tareas", back_populates="personal")
+
+    def __init__(self, nombre, nif, direccion, movil, carnet, rol, costo):
         self.nombre = nombre
-        self.apellido= apellido
         self.nif = nif
         self.direccion= direccion
-        self.poblacion = poblacion
-        self.ciudad= ciudad
-        self.pais= pais
         self.movil = movil
-        self.correo = correo
         self.carnet = carnet
         self.rol = rol
+        self.costo = costo
 
 class Crear(db.Base):
     __tablename__= 'parcelas'
@@ -102,7 +93,7 @@ class Crear(db.Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     comunidad= Column(String)
     provincia = Column(String)
-    nombre = Column(String)
+    nombre = Column(String, unique=True)
     municipio = Column(String)
     poligono = Column(Integer)
     parcela = Column(Integer)
@@ -115,6 +106,13 @@ class Crear(db.Base):
     plantas = Column(Integer)
     secano = Column(String)
     aire_libre = Column(String)
+
+    tareas = relationship("Tareas", back_populates="parcela")
+    unidades = relationship(
+        "Ugestion",
+        secondary=ugestion_parcela,
+        back_populates="parcelas"
+    )
 
     def __init__(self,nombre, comunidad, provincia,municipio,poligono,parcela,recinto,especie,variedad,edad,estado,superficie,plantas,secano,aire_libre):
         self.nombre=nombre
@@ -139,24 +137,19 @@ class Inventario(db.Base):
 
     id= Column(Integer, primary_key=True, autoincrement=True)
     tipo_producto= Column(String)
-    producto= Column(String )
-    registro= Column(String)
+    producto= Column(String, unique=True )
     abono= Column(String)
-    descripcion= Column(String)
-    fabricante= Column(String)
     ingrediente= Column(String)
     autorizado= Column(String)
     caducidad= Column(String)
 
     costos = relationship("Costos", back_populates="inventario", uselist=False)
+    tareas = relationship("Tareas", back_populates="inventario")
 
-    def __init__(self, tipo_producto, producto, registro, abono, descripcion, fabricante, ingrediente, autorizado, caducidad):
+    def __init__(self, tipo_producto, producto, abono, ingrediente, autorizado, caducidad):
         self.tipo_producto= tipo_producto
         self.producto= producto
-        self.registro= registro
         self.abono= abono
-        self.descripcion= descripcion
-        self.fabricante= fabricante
         self.ingrediente= ingrediente
         self.autorizado= autorizado
         self.caducidad= caducidad
@@ -164,20 +157,30 @@ class Inventario(db.Base):
 class Tareas(db.Base):
     __tablename__ = 'tareas'
 
-    id= Column(Integer, primary_key=True, autoincrement=True)
-    parcela_tratar= Column(String)
-    unidades_tratar= Column(String )
-    tipo_labor= Column(String)
-    labores= Column(String)
-    fertilizar= Column(String)
-    tratar= Column(String)
-    prioridad= Column(String)
-    personal= Column(String)
-    equipos= Column(String)
-    productos= Column(String)
-    fecha= Column(String)
+    id = Column(Integer, primary_key=True, autoincrement=True)
 
-    def __init__(self, parcela_tratar, unidades_tratar, tipo_labor, labores, fertilizar, tratar, prioridad, personal, equipos, productos, fecha):
+    parcela_tratar = Column(String, ForeignKey('parcelas.nombre'))
+    personal_nombre = Column(String, ForeignKey('personal.nombre'))
+    equipo_tipo = Column(String, ForeignKey('equipos.tipo'))
+    productos = Column(String, ForeignKey('inventario.producto'))
+    cantidad = Column(Integer)
+
+    unidades_tratar = Column(String)
+    tipo_labor = Column(String)
+    labores = Column(String)
+    fertilizar = Column(String)
+    tratar = Column(String)
+    prioridad = Column(String)
+    fecha = Column(String)
+    costo = Column(Integer)
+
+    equipos = relationship("Equipos", back_populates="tareas")
+    personal = relationship("Personal", back_populates="tareas")
+    inventario = relationship("Inventario", back_populates="tareas")
+    parcela = relationship("Crear", back_populates="tareas")
+
+
+    def __init__(self, parcela_tratar, unidades_tratar, tipo_labor, labores, fertilizar, tratar, prioridad, personal_nombre, equipo_tipo, productos, fecha, costo, cantidad):
         self.parcela_tratar= parcela_tratar
         self.unidades_tratar= unidades_tratar
         self. tipo_labor= tipo_labor
@@ -185,22 +188,30 @@ class Tareas(db.Base):
         self. fertilizar= fertilizar
         self.tratar= tratar
         self.prioridad=prioridad
-        self.equipos= equipos
-        self.personal= personal
+        self.equipo_tipo= equipo_tipo
+        self.personal_nombre= personal_nombre
         self.productos= productos
         self.fecha= fecha
+        self.costo = costo
+        self.cantidad = cantidad
 
 
 class Ugestion(db.Base):
-    __tablename__='unidades de gestion'
+    __tablename__='unidades_gestion'
 
     id= Column(Integer, primary_key=True, autoincrement=True)
     nombre= Column(String)
-    parcela=Column(String)
     fecha= Column(String)
 
-    def __init__(self, nombre, parcela, fecha):
+    parcelas = relationship(
+        "Crear",
+        secondary=ugestion_parcela,
+        back_populates="unidades"
+    )
+
+    def __init__(self, nombre, fecha):
         self.nombre= nombre
-        self.parcela= parcela
         self.fecha = fecha
+
+
 

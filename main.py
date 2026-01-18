@@ -11,14 +11,24 @@ def home():
     datos= db.session.query(Ugestion).group_by(Ugestion.nombre).all()
     return render_template("index.html", datos= datos)
 
-@app.route("/recursos")
-def recursos():
-    return render_template("recursos.html")
-
 @app.route("/unidades_gestion/<var>")
 def unidad_gestion(var):
-    valores= db.session.query(Ugestion.nombre, Ugestion.parcela, Ugestion.fecha).where(Ugestion.nombre==var).all()
-    return render_template("unidades_gestion.html", valores=valores)
+    ug = db.session.query(Ugestion).filter_by(nombre=var).first()
+
+    parcelas = []
+    if ug:
+        for p in ug.parcelas:
+            parcelas.append({
+                "nombre": p.nombre,
+                "tareas": p.tareas
+            })
+
+    return render_template(
+        "unidades_gestion.html",
+        parcelas=parcelas,
+        ug=ug
+    )
+
 
 @app.route("/tareas")
 def tareas():
@@ -69,7 +79,7 @@ def parcela_explo():
 @app.route("/info_parcela/<id>")
 def parcela_info(id):
     datos = db.session.query(Crear).filter_by(id=id)
-    return render_template("info_parcela.html", datos=datos)
+    return render_template("mapa.html", datos=datos)
 
 #-------------------------CREAR------------------------------------------------------
 
@@ -83,7 +93,7 @@ def asignarparcela():
 
 @app.route("/crear_tarea", methods=['POST'])
 def crear_tarea():
-    valores= Tareas(parcela_tratar=request.form["parcela_tratar"],unidades_tratar=request.form["unidades_tratar"],tipo_labor=request.form["tipo_labor"],labores=request.form["labores"],tratar=request.form["tratar"],fertilizar=request.form["fertilizar"],prioridad=request.form["prioridad"],equipos=request.form["equipos"],personal=request.form["personal"],productos=request.form["productos"], fecha=request.form["fecha"])
+    valores= Tareas(parcela_tratar=request.form["parcela_tratar"], cantidad = request.form["cantidad"], unidades_tratar=request.form["unidades_tratar"],tipo_labor=request.form["tipo_labor"],labores=request.form["labores"],tratar=request.form["tratar"],fertilizar=request.form["fertilizar"],prioridad=request.form["prioridad"],equipo_tipo=request.form["equipos"],personal_nombre=request.form["personal"],productos=request.form["productos"], fecha=request.form["fecha"], costo=request.form["costo"])
     db.session.add(valores)
     db.session.commit()
     db.session.close()
@@ -91,7 +101,7 @@ def crear_tarea():
 
 @app.route("/crear_producto", methods=['POST'])
 def asignarproducto():
-    valores= Inventario(tipo_producto=request.form["tipo_producto"], producto=request.form["producto"],registro=request.form["registro"], abono=request.form["abono"],descripcion=request.form["descripcion"],fabricante=request.form["fabricante"],ingrediente=request.form["ingrediente"],autorizado=request.form["autorizado"],caducidad=request.form["caducidad"])
+    valores= Inventario(tipo_producto=request.form["tipo_producto"], producto=request.form["producto"], abono=request.form["abono"],ingrediente=request.form["ingrediente"],autorizado=request.form["autorizado"],caducidad=request.form["caducidad"])
     db.session.add(valores)
     db.session.commit()
     cantidades= Costos(cantidad= request.form["cantidad"], unidades= request.form["unidades"], unidades_c= request.form["unidades_c"], costo= request.form["costo"], id_inventario=(valores.id))
@@ -102,7 +112,7 @@ def asignarproducto():
 
 @app.route("/crear_equipo", methods=['POST'])
 def asignarequipo():
-    valores= Equipos(nombre=request.form["nombre"],fecha=request.form["fecha"],matricula=request.form["matricula"],modelo=request.form["modelo"],marca=request.form["marca"],serie=request.form["serie"],tipo=request.form["tipo"],roma=request.form["roma"])
+    valores= Equipos(fecha=request.form["fecha"],matricula=request.form["matricula"],tipo=request.form["tipo"],costo=request.form["costo"])
     db.session.add(valores)
     db.session.commit()
     db.session.close()
@@ -110,7 +120,7 @@ def asignarequipo():
 
 @app.route("/crear_personal", methods=['POST'])
 def asignarpersonal():
-    valores= Personal(nombre=request.form["nombre"],apellido=request.form["apellido"],nif=request.form["nif"],direccion=request.form["direccion"],poblacion=request.form["poblacion"],ciudad=request.form["ciudad"],pais=request.form["pais"],movil=request.form["movil"],correo=request.form["correo"],carnet=request.form["carnet"],rol=request.form["rol"])
+    valores= Personal(nombre=request.form["nombre"],nif=request.form["nif"],direccion=request.form["direccion"],movil=request.form["movil"],carnet=request.form["carnet"],rol=request.form["rol"],costo=request.form["costo"])
     db.session.add(valores)
     db.session.commit()
     db.session.close()
@@ -118,21 +128,32 @@ def asignarpersonal():
 
 @app.route("/crear_infraestructura", methods=['POST'])
 def asignarinfraestructura():
-    valores= Infraestructura(nombre=request.form["nombre"],direccion=request.form["direccion"],poblacion=request.form["poblacion"],ciudad=request.form["ciudad"],pais=request.form["pais"],local=request.form["local"])
+    valores= Infraestructura(nombre=request.form["nombre"],direccion=request.form["direccion"],local=request.form["local"],costo=request.form["costo"])
     db.session.add(valores)
     db.session.commit()
     db.session.close()
     return redirect(url_for('infraestructura'))
 
-@app.route("/crear_explo", methods=['POST'])
+@app.route("/crear_explo", methods=["POST"])
 def asignarexplo():
-    options= request.form.getlist("parcela")
-    for op in options:
-        valores= Ugestion(nombre=request.form["nombre"], fecha= request.form["fecha"], parcela=op)
-        db.session.add(valores)
+    ug = Ugestion(
+        nombre=request.form["nombre"],
+        fecha=request.form["fecha"]
+    )
+
+    parcelas_seleccionadas = request.form.getlist("parcela")
+
+    for parcela_id in parcelas_seleccionadas:
+        parcela = db.session.get(Crear, int(parcela_id))
+        if parcela:
+            ug.parcelas.append(parcela)
+
+    db.session.add(ug)
     db.session.commit()
-    db.session.close()
-    return redirect(url_for('home'))
+
+    return redirect(url_for("home"))
+
+
 
 #----------------------EDITAR-----------------------------------------------
 
@@ -196,10 +217,17 @@ def eliminar(tipo, id):
         db.session.commit()
         db.session.close()
         return redirect(url_for('inventario'))
+    elif tipo == '6':
+        tesoreria = db.session.query(Tareas).filter_by(id=id).first()
+        db.session.delete(tesoreria)
+        db.session.commit()
+        db.session.close()
+        return redirect(url_for('tareas'))
 
 if __name__ == "__main__":
     db.Base.metadata.create_all(db.engine)
     app.secret_key = 'super secret key'
     app.jinja_env.globals.update(zip=zip)
     port = int(os.environ.get("PORT", 5000))
+    #------app.run(debug=True)
     app.run(host="0.0.0.0", port=port)

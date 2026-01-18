@@ -1,0 +1,9 @@
+#map{
+    height: 500px;
+    width: 500px;
+}
+
+.info_cultivo{
+    display: flex;
+    flex-direction: column;
+}

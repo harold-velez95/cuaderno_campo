@@ -13,8 +13,8 @@ function entradas(){
 function editar(action, id) {
     if (action === 'entrar') {
         // Ocultar todas las cards
-        let cards = document.getElementsByClassName('card');
-        document.getElementById('footer_parcela').style.display = 'none';
+        let cards = document.getElementsByClassName('card_main');
+        document.getElementById('footer').style.display = 'none';
         for (let i = 0; i < cards.length; i++) {
             cards[i].style.display = 'none';
         }
@@ -31,10 +31,11 @@ function editar(action, id) {
     } else if (action === 'entrar_inventario'){
         //ocultar la tabla
         console.log(id);
-        let cards = document.getElementsByClassName('main_table');
+        let cards = document.getElementsByClassName('info');
         for (let i = 0; i < cards.length; i++) {
             cards[i].style.display = 'none';
         }
+        document.getElementById('footer').style.display = 'none';
         document.getElementById('editar_parcela_' + id).style.display = 'block';
     } else if (action === 'salir_inventario') {
         // Ocultar el formulario de edición
@@ -52,15 +53,15 @@ function tarea(action) {
     var labores = document.getElementById('labores');
     var fertilizar = document.getElementById('fertilizar');
 
-    if (action === "fitosanitarios") {
+    if (action === "Fitosanitarios") {
         labores.style.display = "none";
         tratar.style.display = "inherit";
         fertilizar.style.display = "none";
-    } else if (action === "culturales") {
+    } else if (action === "Culturales") {
         labores.style.display = "inherit";
         tratar.style.display = "none";
         fertilizar.style.display = "none";
-    } else if (action === "fertilizacion") {
+    } else if (action === "Fertilización") {
         labores.style.display = "none";
         tratar.style.display = "none";
         fertilizar.style.display = "inherit";

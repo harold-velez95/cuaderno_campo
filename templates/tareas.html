@@ -4,47 +4,66 @@
          <meta charset="UTF-8">
          <meta http-equiv="X-UA-Compatible" content="IE=edge">
          <title>ARCASENS</title>
-         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
-         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='form.css') }}">
-         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-         <link rel="preconnect" href="https://fonts.googleapis.com">
-         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-         <link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet">
+         <link rel="stylesheet" href="/static/style.css"/>
+         <link rel="stylesheet" href="/static/table.css"/>
+         <link rel="stylesheet" href="/static/form.css"/>
+    
 
     </head>
-    <body style="background-color:#C9D6FF;">
+    <body>
             <header>
-                <a href="/"><img src="{{ url_for('static', filename='imagen/arcasens.jpg') }}"></a>
+                <div class="menu">
+                    <a href="/tareas"><img src="/static/imagen/tareas.svg"><span class="texto-hidden">Tareas</span></a>
+                    <a href="/inventario"><img src="/static/imagen/inventario.svg"><span class="texto-hidden">Inventario</span></a>
+                    <a href="/parcelas"><img src="/static/imagen/parcela.svg"><span class="texto-hidden">Parcelas</span></a>
+                    <a href="/equipos"><img src="/static/imagen/tractor.svg"><span class="texto-hidden">Equipos</span></a>
+                    <a href="/personal"><img src="/static/imagen/user.svg"><span class="texto-hidden">Personal</span></a>
+                    <a href="/infraestructura"><img src="/static/imagen/local.svg"><span class="texto-hidden">infraestructura</span></a>
+                </div>
+                <a href="/"><img src="/static/imagen/arcasens.jpg"></a>
             </header>
-            <div class="menu">
-                <a href="/recursos">Ir a Recursos</a>
-            </div>
             <div class="main">
+                <div class="title">
+                    <h1>Tareas</h1>
+                </div>
                 <div class="bodysec">
+                    {% if tareas %}
                 {% for valor in tareas%}
                     <div class="cardtareas">
-                        <h1>{{valor.tipo_labor}}</h2>
+                        <h3>{{valor.tipo_labor}}</h3>
                         <p>
                             {% if valor.tipo_labor=='fertilizacion' %}
                         <span>Tipo de labor: </span> {{valor.fertilizar}}
                         {% endif %}<br>
                         <span>Aplicar a:</span> {{valor.parcela_tratar}}<br>
                         <span>Prioridad: </span> {{valor.prioridad}}<br>
-                        <span>equipos a utilizar: </span> {{valor.equipos}}<br>
-                        <span>Personal a realizar la labor: </span> {{valor.personal}}<br>
+                        <span>equipos a utilizar: </span> {{valor.equipo_tipo}}<br>
+                        <span>Personal a realizar la labor: </span> {{valor.personal_nombre}}<br>
                         <span>Productos a emplear: </span> {{valor.productos}}<br>
-                        <span>Fecha de realización: </span> {{valor.fecha}}
+                        <span>Fecha de realización: </span> {{valor.fecha}}<br>
+                        {% if valor.personal.costo and valor.equipos.costo %}
+                        <span>Costo de la tarea: </span> {{((valor.personal.costo + valor.equipos.costo) *valor.costo) + valor.inventario.costos.costo*valor.cantidad}} €
+                        {% endif %}
                         </p>
                         <div class="card_status">
                             <span>Estado:</span>
                             <button class="boton_status" data-id="{{valor.id}}">Pendiente</button>
+                            <a href="/eliminar/6/{{valor.id}}"><img src="/static/imagen/eliminar.svg"></a>
                         </div>
                         
 
                     </div>
                     {% endfor %}
+                    {% else %}
+                    <h3>No hay tareas creadas</h3>
+                    {% endif %}
                 </div>
-                <footer><button type="button" onclick="form_view()" class="boton1">Crear tarea (+)</button></footer>
+                <footer>
+                    <a>
+                        <img src="/static/imagen/plus.svg" onclick="form_view()">
+                        <span class="texto-hidden">Añadir</span>
+                    </a>
+                </footer>
             </div>
             <div id="main_form" style="display: none;">
                 <form action="/crear_tarea" class="form_tareas" method="post">
@@ -132,7 +151,7 @@
                             <select name="equipos">
                                 <option>Seleccionar</option>
                                  {% for perso in equipos%}
-                                <option value="{{perso.nombre}}">{{perso.nombre}}</option>
+                                <option value="{{perso.tipo}}">{{perso.tipo}}</option>
                                {% endfor %}
                             </select>
                         </span>
@@ -144,8 +163,14 @@
                                 {% endfor %}
                             </select>
                         </span>
+                        <span>cantidad a emplear:
+                            <input type="number" name="cantidad" placeholder="cantidad en Kg">
+                        </span>
                         <span>Fecha de realización:
                             <input type="date" name="fecha">
+                         </span>
+                         <span>Tiempo de ejecución (horas):
+                            <input type="number" name="costo" required>
                          </span>
                     </fieldset>
                     </div>

@@ -1,13 +1,23 @@
-form{
+#main_form, .main_form{
   display:flex;
-  flex-direction:column;
-  justify-content: space-between;
+  justify-content: center;
   min-height: 400px;
   align-items:center;
 }
 
+fieldset, .main_form fieldset{
+  display:flex;
+  flex-direction: column;
+  align-items:center;
+  justify-content:center;
+  margin:10px;
+  padding:10px;
+  border: 1px solid #3F7D58;
+}
+
 .form_inventario{
   display:flex;
+  width:fit-content;
   flex-direction:row;
   flex-wrap: wrap;
   justify-content:center;
@@ -37,6 +47,7 @@ form{
 .drops{
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 12px;
 }
 
@@ -46,15 +57,14 @@ form{
   text-align:center;
 }
 
-form fieldset{
+form{
   display:flex;
-  align-items:center;
-  flex-wrap:wrap;
-  justify-content:center;
-  margin:10px;
-  padding:20px;
-  border: 1px solid #3F7D58;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap:20px;
 }
+
 
 
 input[type="text"], select{
@@ -104,7 +114,6 @@ button{
     padding: 15px;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-size: 20px;
-    margin-right: 5%;
     background-color: white;
     width:200px;
 }
@@ -139,22 +148,12 @@ span{
   padding: 10px;
 }
 
-.info2{
-  width: 350px;
-}
-
-#editar_parcela input{
-  width: 130px;
-  font-size:15px;
-}
-
-#editar_parcela{
-  padding:20px;
-  margin: 20px;
-}
-
 
 .dropdown-color{
   background-color: #3F7D58;
   color: white;
+}
+
+li{
+  text-align: center;
 }

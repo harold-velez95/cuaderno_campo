@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Información de parcela</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<link rel="stylesheet" href="/static/style.css"/>
+<link rel="stylesheet" href="/static/mapa.css"/>
+<link rel="stylesheet" href="/static/table.css"/>
+</head>
+<body>
+  <header>
+    <div class="menu">
+        <a href="/tareas"><img src="/static/imagen/tareas.svg"><span class="texto-hidden">Tareas</span></a>
+        <a href="/inventario"><img src="/static/imagen/inventario.svg"><span class="texto-hidden">Inventario</span></a>
+        <a href="/parcelas"><img src="/static/imagen/parcela.svg"><span class="texto-hidden">Parcelas</span></a>
+        <a href="/equipos"><img src="/static/imagen/tractor.svg"><span class="texto-hidden">Equipos</span></a>
+        <a href="/personal"><img src="/static/imagen/user.svg"><span class="texto-hidden">Personal</span></a>
+        <a href="/infraestructura"><img src="/static/imagen/local.svg"><span class="texto-hidden">infraestructura</span></a>
+    </div>
+    <a href="/"><img src="/static/imagen/arcasens.jpg"></a>
+</header>
+<div class="main">
+  <div class="title">
+      <h1>Info de parcela</h1>
+</div>
+<div class="datos" style="display:none;">
+  {% for x in datos %}
+  <input type="number" id="provincia" value="{{x.provincia}}">
+  <input type="number" id="municipio" value="{{x.municipio}}">
+  <input type="number" id="agregado" value="0">
+  <input type="number" id="zona" value="0">
+  <input type="number" id="poligono" value="{{x.poligono}}">
+  <input type="number" id="parcela" value="{{x.parcela}}">
+  <input type="number" id="recinto" value="{{x.recinto}}">
+  {% endfor %}
+</div>
+  <div class="bodysec_table">
+
+    <div id="map"></div>
+    <div class="info_cultivo">
+      <h3>Información de cultivo</h3>
+        <table class="info">
+            <tr>
+                <th scope="col" class="left">cultivo</th>
+                <th scope="col">variedad</th>
+                <th scope="col">edad (meses)</th>
+                <th scope="col" class="right">estado fenológico</th>
+             </tr>
+            {% for x in datos %}
+            <tr>
+                <td>{{x.especie}}</td>
+                <td>{{x.variedad}}</td>
+                <td>{{x.edad}}</td>
+                <td>{{x.estado}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <h3>Información de parcela</h3>
+        <table class="info">
+            <tr>
+                <th scope="col" class="left">superficie cultivada (m2)</th>
+                <th scope="col">número de arboles</th>
+                <th scope="col">sistema de siembra</th>
+                <th scope="col" class="right">producción</th>
+            </tr>
+            {% for x in datos %}
+            <tr>
+                <td>{{x.superficie}}</td>
+                <td>{{x.plantas}}</td>
+                <td>{{x.secano}}</td>
+                <td>{{x.aire_libre}}</td>
+            </tr>
+            {% endfor %}
+          </table>
+      </div>
+  </div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="/static/mapa.js"></script>
+
+</body>
+</html>
